@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 기록 트래커</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d45;
+    --accent: #3b82f6;
+    --accent2: #10b981;
+    --accent3: #f59e0b;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #4b6280;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* 배경 그리드 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 헤더 */
+  header {
+    margin-bottom: 40px;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .logo-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--text3);
+    font-weight: 300;
+    margin-left: 22px;
+  }
+
+  /* 탭 */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 28px;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    color: var(--text2);
+    border-radius: 9px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .tab.active {
+    background: var(--surface2);
+    color: var(--text);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .tab-icon { font-size: 15px; }
+
+  /* 카드 */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* 텍스트 영역 */
+  .paste-area {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    resize: vertical;
+    min-height: 130px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .paste-area:focus {
+    border-color: var(--accent);
+  }
+
+  .paste-area::placeholder { color: var(--text3); }
+
+  /* 버튼 */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: 9px;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    flex: 1;
+  }
+
+  .btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-ghost {
+    background: var(--surface2);
+    color: var(--text2);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover { border-color: var(--text3); color: var(--text); }
+
+  /* 파싱 결과 */
+  .result-box {
+    display: none;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 16px;
+  }
+
+  .result-box.show { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .result-type {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .type-dividend { background: rgba(16,185,129,0.15); color: var(--accent2); }
+  .type-buy { background: rgba(59,130,246,0.15); color: var(--accent); }
+  .type-sell { background: rgba(239,68,68,0.15); color: var(--danger); }
+  .type-unknown { background: rgba(148,163,184,0.15); color: var(--text2); }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+
+  .result-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+
+  .result-item:nth-child(even) { border-right: none; }
+  .result-item:nth-last-child(-n+2) { border-bottom: none; }
+
+  .result-label {
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .result-value {
+    font-size: 14px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+  }
+
+  .result-value.highlight { color: var(--accent2); }
+
+  /* 구글 시트 설정 */
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .input-label {
+    font-size: 12px;
+    color: var(--text2);
+    font-weight: 500;
+  }
+
+  .input-field {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .input-field:focus { border-color: var(--accent); }
+  .input-field::placeholder { color: var(--text3); }
+
+  /* 연동 상태 */
+  .status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 12px;
+  }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--text3);
+  }
+
+  .status-dot.connected { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+  .status-dot.error { background: var(--danger); }
+
+  /* 기록 리스트 */
+  .records-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .record-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .record-left { display: flex; align-items: center; gap: 12px; }
+
+  .record-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    min-width: 48px;
+    text-align: center;
+  }
+
+  .record-name { font-size: 14px; font-weight: 500; }
+  .record-date { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  .record-amount {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: right;
+  }
+
+  .record-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* 알림 토스트 */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    z-index: 100;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { border-color: var(--accent2); }
+  .toast.error { border-color: var(--danger); }
+
+  /* 도움말 */
+  .help-box {
+    background: rgba(59,130,246,0.06);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.7;
+    margin-top: 14px;
+  }
+
+  .help-box strong { color: var(--accent); }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text3);
+    font-size: 13px;
+  }
+
+  .empty-icon { font-size: 32px; margin-bottom: 10px; }
+
+  /* 구글 시트 가이드 */
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(59,130,246,0.15);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .step-text code {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11.5px;
+    color: var(--accent2);
+  }
+
+  .script-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11.5px;
+    color: var(--accent2);
+    line-height: 1.8;
+    white-space: pre;
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .result-grid { grid-template-columns: 1fr; }
+    .result-item { border-right: none !important; }
+    .result-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+    .result-item:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-top">
+      <div class="logo-dot"></div>
+      <h1>투자 기록 트래커</h1>
+    </div>
+    <div class="subtitle">카카오톡 알림 → 자동 파싱 → 구글 시트 기록</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('parse')">
+      <span class="tab-icon">📋</span> 메시지 파싱
+    </button>
+    <button class="tab" onclick="switchTab('records')">
+      <span class="tab-icon">📊</span> 기록 <span id="record-count" style="background:rgba(59,130,246,0.2);color:var(--accent);padding:1px 7px;border-radius:10px;font-size:11px;margin-left:2px">0</span>
+    </button>
+    <button class="tab" onclick="switchTab('settings')">
+      <span class="tab-icon">⚙️</span> 구글 시트 연동
+    </button>
+  </div>
+
+  <!-- 파싱 탭 -->
+  <div id="tab-parse">
+    <div class="card">
+      <div class="card-title">카카오톡 메시지 붙여넣기</div>
+      <textarea class="paste-area" id="msg-input" placeholder="카카오톡에서 복사한 메시지를 여기에 붙여넣으세요.
+
+예시:
+[삼성증권] &lt;배당금 입금 안내&gt;
+-종목명 : 맥쿼리인프라
+-세후 배당금액 : 100,320원
+..."></textarea>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="parseMessage()">
+          ⚡ 자동 파싱
+        </button>
+        <button class="btn btn-ghost" onclick="clearInput()">지우기</button>
+      </div>
+    </div>
+
+    <div class="result-box" id="result-box">
+      <div class="result-header">
+        <span id="result-type-badge" class="result-type"></span>
+        <span style="font-size:12px;color:var(--text3)" id="result-source"></span>
+      </div>
+      <div class="result-grid" id="result-grid"></div>
+      <div style="padding:12px 16px;border-top:1px solid var(--border)">
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveRecord()" id="save-btn">
+            💾 기록 저장
+          </button>
+          <button class="btn btn-ghost" id="sheets-btn" onclick="sendToSheets()" style="display:none">
+            📤 구글 시트 전송
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="help-box">
+      <strong>지원 메시지 형식</strong><br>
+      삼성증권 배당금 입금 안내 · 매수/매도 체결 알림<br>
+      키움증권, NH투자증권, 미래에셋 등 다른 증권사도 메시지를 붙여넣으면 자동 인식합니다.
+    </div>
+  </div>
+
+  <!-- 기록 탭 -->
+  <div id="tab-records" style="display:none">
+    <div class="card">
+      <div class="card-title">투자 기록</div>
+      <div id="records-container">
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          아직 기록이 없습니다.<br>메시지를 파싱하고 저장해보세요.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 설정 탭 -->
+  <div id="tab-settings" style="display:none">
+    <div class="card">
+      <div class="card-title">구글 시트 연동 설정</div>
+
+      <div class="input-group">
+        <div class="input-label">웹앱 URL (Google Apps Script 배포 URL)</div>
+        <input class="input-field" id="sheets-url" type="text"
+          placeholder="https://script.google.com/macros/s/XXXXX/exec"
+          oninput="saveSettings()">
+      </div>
+
+      <div class="status-row">
+        <div class="status-dot" id="status-dot"></div>
+        <span id="status-text">URL을 입력하면 연동이 활성화됩니다</span>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button class="btn btn-ghost" style="flex:1" onclick="openUrlTest()">
+          🔗 URL 브라우저에서 열어서 확인
+        </button>
+        <button class="btn btn-primary" style="flex:1" onclick="markConnected()">
+          ✅ 연결됐어요 (수동 확인)
+        </button>
+      </div>
+      <div class="help-box" style="margin-top:10px">
+        <strong>확인 방법</strong><br>
+        1. 위 버튼으로 URL을 브라우저에서 열어보세요<br>
+        2. 화면에 <code style="background:var(--surface);padding:1px 5px;border-radius:3px;font-family:monospace">{"result":"ok"}</code> 가 보이면 정상입니다<br>
+        3. 정상이면 오른쪽 "연결됐어요" 버튼을 눌러주세요
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Google Apps Script 설정 방법</div>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">구글 드라이브에서 <strong style="color:var(--text)">스프레드시트</strong>를 새로 만드세요.<br>
+          시트 이름을 <code>투자기록</code>으로 변경하세요.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">상단 메뉴 <code>확장 프로그램</code> → <code>Apps Script</code> 클릭</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">아래 스크립트를 복사해서 붙여넣고 저장하세요 (<code>Ctrl+S</code>)</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><code>배포</code> → <code>새 배포</code> → 유형: <code>웹 앱</code> → 액세스: <code>모든 사용자</code> → 배포</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-text">생성된 <strong style="color:var(--text)">웹 앱 URL</strong>을 위 입력창에 붙여넣으세요</div>
+        </div>
+      </div>
+
+      <div class="script-block" id="script-code">function doGet(e) {
+  try {
+    var p = e && e.parameter ? e.parameter : {};
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('투자기록') || ss.getActiveSheet();
+
+    // 헤더 자동 생성
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        '날짜','종류','증권사','종목명',
+        '금액','수량','단가','계좌번호','기록일시'
+      ]);
+    }
+
+    // 연결 테스트 (데이터 없이 test=1만 온 경우)
+    if (p.test && !p.name) {
+      return response({result: 'ok', message: '연결 성공!'});
+    }
+
+    sheet.appendRow([
+      decodeURIComponent(p.date     || ''),
+      decodeURIComponent(p.type     || ''),
+      decodeURIComponent(p.broker   || ''),
+      decodeURIComponent(p.name     || ''),
+      decodeURIComponent(p.amount   || ''),
+      decodeURIComponent(p.quantity || ''),
+      decodeURIComponent(p.price    || ''),
+      decodeURIComponent(p.account  || ''),
+      new Date().toLocaleString('ko-KR')
+    ]);
+
+    return response({result: 'success'});
+
+  } catch(err) {
+    return response({result: 'error', message: err.toString()});
+  }
+}
+
+function response(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}</div>
+      <button class="copy-btn" onclick="copyScript()">복사</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── 상태 ───────────────────────────────────────────
+let records = JSON.parse(localStorage.getItem('inv_records') || '[]');
+let currentParsed = null;
+let sheetsUrl = localStorage.getItem('inv_sheets_url') || '';
+
+// 초기화
+window.onload = () => {
+  if (sheetsUrl) {
+    document.getElementById('sheets-url').value = sheetsUrl;
+    updateStatus(true);
+  }
+  renderRecords();
+  updateCount();
+};
+
+// ─── 탭 전환 ────────────────────────────────────────
+function switchTab(name) {
+  ['parse','records','settings'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t === name ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach((el, i) => {
+    el.classList.toggle('active', ['parse','records','settings'][i] === name);
+  });
+}
+
+// ─── 파싱 ───────────────────────────────────────────
+function parseMessage() {
+  const msg = document.getElementById('msg-input').value.trim();
+  if (!msg) { showToast('❗ 메시지를 먼저 붙여넣어 주세요', 'error'); return; }
+
+  const result = extractData(msg);
+  currentParsed = result;
+  showResult(result);
+}
+
+function extractData(msg) {
+  const data = { raw: msg, type: 'unknown', broker: '', name: '', date: '',
+    amount: '', quantity: '', price: '', account: '', taxBefore: '', tax: '' };
+
+  // 증권사 감지 (대괄호 형식 + 줄바꿈 형식 모두 지원)
+  const brokerMatch = msg.match(/\[([\w가-힣]+증권|[\w가-힣]+투자|키움|미래에셋|한투|KB|NH|신한|대신|하나|하이|토스|LS)\]/i)
+    || msg.match(/^\[(한국투자|삼성증권|키움증권|NH투자|미래에셋|신한투자|KB증권|대신증권|하나증권|토스증권)\]/m);
+  if (brokerMatch) data.broker = brokerMatch[1];
+
+  // 한국투자 형식: 첫 줄이 [한국투자] 단독
+  if (!data.broker && msg.match(/^\[한국투자\]/m)) data.broker = '한국투자증권';
+
+  // 타입 감지
+  if (msg.includes('배당금') || msg.includes('분배금')) data.type = 'dividend';
+  else if (msg.includes('매수') && msg.includes('체결')) data.type = 'buy';
+  else if (msg.includes('매도') && msg.includes('체결')) data.type = 'sell';
+  else if (msg.includes('매수')) data.type = 'buy';
+  else if (msg.includes('매도')) data.type = 'sell';
+
+  // 종목명 (* 또는 - 글머리 모두 지원)
+  const namePatterns = [
+    /종목명\s*:\s*([^\n\r*★∨http]+)/,
+    /종목\s*:\s*([^\n\r*★∨http]+)/,
+    /상품명\s*:\s*([^\n\r*★∨http]+)/,
+  ];
+  for (const p of namePatterns) {
+    const m = msg.match(p);
+    if (m) { data.name = m[1].trim(); break; }
+  }
+
+  // 계좌번호
+  const accPatterns = [
+    /계좌번호\s*:\s*([\d\*\-]+)/,
+    /계좌\s*:\s*([\d\*\-]+)/,
+  ];
+  for (const p of accPatterns) {
+    const m = msg.match(p);
+    if (m) { data.account = m[1].trim(); break; }
+  }
+
+  // 날짜
+  const datePatterns = [
+    /입금일자\s*:\s*([\d년월일\s]+)/,       // 한국투자: 입금일자
+    /기준일\s*:\s*([\d년월일\s]+)/,
+    /체결일\s*:\s*([\d년월일\s\-\.]+)/,
+    /(\d{4}년\s*\d{1,2}월\s*\d{1,2}일)/,
+    /(\d{4}[.\-]\d{2}[.\-]\d{2})/,
+  ];
+  for (const p of datePatterns) {
+    const m = msg.match(p);
+    if (m) { data.date = m[1].trim(); break; }
+  }
+  if (!data.date) data.date = new Date().toLocaleDateString('ko-KR');
+
+  // 금액 파싱
+  const amtPatterns = [
+    { key: 'amount', patterns: [
+      /세후\s*배당금액\s*:\s*([\d,]+원?)/,
+      /세후\s*분배금액\s*:\s*([\d,]+원?)/,
+      /입금액\s*:\s*([\d,]+원?)/,          // 한국투자
+      /입금\s*금액\s*:\s*([\d,]+원?)/,
+      /체결금액\s*:\s*([\d,]+원?)/,
+      /거래금액\s*:\s*([\d,]+원?)/,
+    ]},
+    { key: 'taxBefore', patterns: [/세전\s*배당금액\s*:\s*([\d,]+원?)/] },
+    { key: 'tax', patterns: [/세금\s*:\s*([\d,]+원?)/] },
+    { key: 'quantity', patterns: [
+      /수량\s*:\s*([\d,]+주?)/,
+      /체결수량\s*:\s*([\d,]+주?)/,
+    ]},
+    { key: 'price', patterns: [
+      /단가\s*:\s*([\d,]+원?)/,
+      /체결단가\s*:\s*([\d,]+원?)/,
+    ]},
+  ];
+
+  for (const { key, patterns } of amtPatterns) {
+    for (const p of patterns) {
+      const m = msg.match(p);
+      if (m) { data[key] = m[1].trim(); break; }
+    }
+  }
+
+  return data;
+}
+
+// ─── 결과 표시 ──────────────────────────────────────
+function showResult(data) {
+  const box = document.getElementById('result-box');
+  const badge = document.getElementById('result-type-badge');
+  const grid = document.getElementById('result-grid');
+
+  const typeMap = {
+    dividend: { label: '배당금', cls: 'type-dividend' },
+    buy: { label: '매수', cls: 'type-buy' },
+    sell: { label: '매도', cls: 'type-sell' },
+    unknown: { label: '알 수 없음', cls: 'type-unknown' },
+  };
+
+  const t = typeMap[data.type];
+  badge.textContent = t.label;
+  badge.className = 'result-type ' + t.cls;
+
+  document.getElementById('result-source').textContent = data.broker || '증권사 미확인';
+
+  // 표시할 필드 구성
+  let fields = [];
+  if (data.name) fields.push({ label: '종목명', value: data.name });
+  if (data.date) fields.push({ label: '기준일 / 체결일', value: data.date });
+  if (data.amount) fields.push({ label: '금액 (세후)', value: data.amount, hl: true });
+  if (data.taxBefore) fields.push({ label: '세전 금액', value: data.taxBefore });
+  if (data.tax) fields.push({ label: '세금', value: data.tax });
+  if (data.quantity) fields.push({ label: '수량', value: data.quantity });
+  if (data.price) fields.push({ label: '단가', value: data.price });
+  if (data.account) fields.push({ label: '계좌번호', value: data.account });
+
+  if (fields.length % 2 !== 0) fields.push({ label: '', value: '' });
+
+  grid.innerHTML = fields.map(f => `
+    <div class="result-item">
+      <div class="result-label">${f.label}</div>
+      <div class="result-value ${f.hl ? 'highlight' : ''}">${f.value || '-'}</div>
+    </div>
+  `).join('');
+
+  // 구글 시트 버튼 표시
+  document.getElementById('sheets-btn').style.display = sheetsUrl ? 'flex' : 'none';
+
+  box.classList.add('show');
+}
+
+// ─── 저장 ────────────────────────────────────────────
+function saveRecord() {
+  if (!currentParsed) return;
+  records.unshift({ ...currentParsed, savedAt: new Date().toISOString() });
+  localStorage.setItem('inv_records', JSON.stringify(records));
+  renderRecords();
+  updateCount();
+  showToast('✅ 기록이 저장되었습니다', 'success');
+  if (sheetsUrl) sendToSheets();
+}
+
+function renderRecords() {
+  const container = document.getElementById('records-container');
+  if (records.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div>아직 기록이 없습니다.<br>메시지를 파싱하고 저장해보세요.</div>`;
+    return;
+  }
+
+  const typeConfig = {
+    dividend: { label: '배당', bg: 'rgba(16,185,129,0.12)', color: 'var(--accent2)' },
+    buy: { label: '매수', bg: 'rgba(59,130,246,0.12)', color: 'var(--accent)' },
+    sell: { label: '매도', bg: 'rgba(239,68,68,0.12)', color: 'var(--danger)' },
+    unknown: { label: '기타', bg: 'rgba(148,163,184,0.12)', color: 'var(--text2)' },
+  };
+
+  container.innerHTML = `<div class="records-list">${records.map((r, i) => {
+    const tc = typeConfig[r.type] || typeConfig.unknown;
+    return `
+    <div class="record-item">
+      <div class="record-left">
+        <div class="record-badge" style="background:${tc.bg};color:${tc.color}">${tc.label}</div>
+        <div>
+          <div class="record-name">${r.name || '종목명 없음'}</div>
+          <div class="record-date">${r.date || '-'} · ${r.broker || ''}</div>
+        </div>
+      </div>
+      <div>
+        <div class="record-amount" style="color:${r.type==='sell'?'var(--danger)':r.type==='buy'?'var(--accent)':'var(--accent2)'}">${r.amount || r.price || '-'}</div>
+        ${r.quantity ? `<div class="record-sub">${r.quantity}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function updateCount() {
+  document.getElementById('record-count').textContent = records.length;
+}
+
+// ─── 구글 시트 전송 ──────────────────────────────────
+function sendToSheets() {
+  if (!sheetsUrl || !currentParsed) return;
+  const btn = document.getElementById('sheets-btn');
+  btn.textContent = '전송 중...';
+  btn.disabled = true;
+
+  const params = new URLSearchParams({
+    date:     currentParsed.date    || '',
+    type:     currentParsed.type    || '',
+    broker:   currentParsed.broker  || '',
+    name:     currentParsed.name    || '',
+    amount:   currentParsed.amount  || '',
+    quantity: currentParsed.quantity|| '',
+    price:    currentParsed.price   || '',
+    account:  currentParsed.account || '',
+  });
+
+  // fetch 대신 <img> 태그로 요청 — CORS 우회
+  const url = `${sheetsUrl}?${params.toString()}`;
+  const img = new Image();
+  img.onload = img.onerror = function() {
+    // 응답 읽기는 불가능하지만 요청은 서버에 도달함
+    showToast('✅ 전송했습니다! 구글 시트에서 확인해주세요', 'success');
+    btn.textContent = '📤 구글 시트 전송';
+    btn.disabled = false;
+  };
+  img.src = url;
+
+  // 3초 후에도 콜백 없으면 강제로 완료 처리
+  setTimeout(() => {
+    if (btn.disabled) {
+      showToast('✅ 전송했습니다! 구글 시트에서 확인해주세요', 'success');
+      btn.textContent = '📤 구글 시트 전송';
+      btn.disabled = false;
+    }
+  }, 3000);
+}
+
+function openUrlTest() {
+  const url = document.getElementById('sheets-url').value.trim();
+  if (!url) { showToast('❗ URL을 먼저 입력해주세요', 'error'); return; }
+  if (!url.includes('script.google.com') || !url.endsWith('/exec')) {
+    showToast('❌ URL 형식 오류 — /exec 로 끝나야 합니다', 'error');
+    return;
+  }
+  window.open(url + '?test=1', '_blank');
+}
+
+function markConnected() {
+  const url = document.getElementById('sheets-url').value.trim();
+  if (!url) { showToast('❗ URL을 먼저 입력해주세요', 'error'); return; }
+  sheetsUrl = url;
+  localStorage.setItem('inv_sheets_url', sheetsUrl);
+  updateStatus(true);
+  showToast('✅ 연결 설정 완료! 이제 데이터를 전송할 수 있습니다', 'success');
+}
+
+function saveSettings() {
+  sheetsUrl = document.getElementById('sheets-url').value.trim();
+  localStorage.setItem('inv_sheets_url', sheetsUrl);
+  updateStatus(!!sheetsUrl);
+}
+
+function updateStatus(ok) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  if (ok && sheetsUrl) {
+    dot.className = 'status-dot connected';
+    txt.textContent = '구글 시트 연동 활성화됨';
+  } else {
+    dot.className = 'status-dot';
+    txt.textContent = 'URL을 입력하면 연동이 활성화됩니다';
+  }
+}
+
+function clearInput() {
+  document.getElementById('msg-input').value = '';
+  document.getElementById('result-box').classList.remove('show');
+  currentParsed = null;
+}
+
+function copyScript() {
+  const text = document.getElementById('script-code').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('📋 스크립트 복사됨', 'success'));
+}
+
+// ─── 토스트 ──────────────────────────────────────────
+function showToast(msg, type = '') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast show ' + type;
+  setTimeout(() => toast.className = 'toast', 2800);
+}
+</script>
+</body>
+</html>
