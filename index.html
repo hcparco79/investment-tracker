@@ -533,16 +533,16 @@
 
   <div class="tabs">
     <button class="tab active" onclick="switchTab('parse')">
-      <span class="tab-icon">📋</span> 메시지 파싱
+      <span class="tab-icon">??</span> 메시지 파싱
     </button>
     <button class="tab" onclick="switchTab('bulk')">
-      <span class="tab-icon">📂</span> 일괄 가져오기
+      <span class="tab-icon">??</span> 일괄 가져오기
     </button>
     <button class="tab" onclick="switchTab('records')">
-      <span class="tab-icon">📊</span> 기록 <span id="record-count" style="background:rgba(59,130,246,0.2);color:var(--accent);padding:1px 7px;border-radius:10px;font-size:11px;margin-left:2px">0</span>
+      <span class="tab-icon">??</span> 기록 <span id="record-count" style="background:rgba(59,130,246,0.2);color:var(--accent);padding:1px 7px;border-radius:10px;font-size:11px;margin-left:2px">0</span>
     </button>
     <button class="tab" onclick="switchTab('settings')">
-      <span class="tab-icon">⚙️</span> 구글 시트 연동
+      <span class="tab-icon">??</span> 구글 시트 연동
     </button>
   </div>
 
@@ -562,7 +562,7 @@
 ※ 날짜 헤더 없이 붙여넣으면 오늘 날짜로 자동입력됩니다 (수정 가능)"></textarea>
       <div class="btn-row">
         <button class="btn btn-primary" onclick="parseMessage()">
-          ⚡ 자동 파싱
+          ? 자동 파싱
         </button>
         <button class="btn btn-ghost" onclick="clearInput()">지우기</button>
       </div>
@@ -577,10 +577,10 @@
       <div style="padding:12px 16px;border-top:1px solid var(--border)">
         <div class="btn-row">
           <button class="btn btn-primary" onclick="saveRecord()" id="save-btn">
-            💾 기록 저장
+            ?? 기록 저장
           </button>
           <button class="btn btn-ghost" id="sheets-btn" onclick="sendToSheets()" style="display:none">
-            📤 구글 시트 전송
+            ?? 구글 시트 전송
           </button>
         </div>
       </div>
@@ -609,7 +609,7 @@
          ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
          ondragleave="this.style.borderColor='var(--border)'"
          ondrop="handleDrop(event)">
-        <div style="font-size:36px;margin-bottom:10px">📂</div>
+        <div style="font-size:36px;margin-bottom:10px">??</div>
         <div style="font-size:14px;margin-bottom:6px;color:var(--text2)">txt 파일을 드래그하거나 클릭해서 업로드</div>
         <div style="font-size:12px">카카오톡 → 대화방 → 메뉴 → 대화 내보내기 → txt</div>
       </div>
@@ -622,10 +622,10 @@
       <div id="bulk-list" style="max-height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:6px"></div>
       <div class="btn-row" style="margin-top:16px">
         <button class="btn btn-primary" onclick="bulkSendAll()" id="bulk-send-btn">
-          📤 전체 구글 시트 전송
+          ?? 전체 구글 시트 전송
         </button>
         <button class="btn btn-ghost" onclick="bulkSaveLocal()" >
-          💾 로컬 저장만
+          ?? 로컬 저장만
         </button>
       </div>
       <div id="bulk-progress" style="display:none;margin-top:12px">
@@ -643,7 +643,7 @@
       <div class="card-title">투자 기록</div>
       <div id="records-container">
         <div class="empty-state">
-          <div class="empty-icon">📭</div>
+          <div class="empty-icon">??</div>
           아직 기록이 없습니다.<br>메시지를 파싱하고 저장해보세요.
         </div>
       </div>
@@ -662,10 +662,10 @@
           oninput="saveSettings()">
       </div>
       <div class="help-box" style="margin-top:0;margin-bottom:14px">
-        💡 <strong>매번 입력하기 귀찮다면</strong> — 아래 버튼으로 URL을 파일 안에 영구 저장하세요.<br>
+        ?? <strong>매번 입력하기 귀찮다면</strong> ? 아래 버튼으로 URL을 파일 안에 영구 저장하세요.<br>
         한 번만 설정하면 파일을 열 때마다 자동으로 연결됩니다.
         <button class="btn btn-primary" style="margin-top:10px;width:100%" onclick="embedUrl()">
-          🔒 URL을 파일에 영구 저장하기
+          ?? URL을 파일에 영구 저장하기
         </button>
       </div>
 
@@ -676,10 +676,10 @@
 
       <div style="display:flex;gap:8px;margin-top:14px">
         <button class="btn btn-ghost" style="flex:1" onclick="openUrlTest()">
-          🔗 URL 브라우저에서 열어서 확인
+          ?? URL 브라우저에서 열어서 확인
         </button>
         <button class="btn btn-primary" style="flex:1" onclick="markConnected()">
-          ✅ 연결됐어요 (수동 확인)
+          ? 연결됐어요 (수동 확인)
         </button>
       </div>
       <div class="help-box" style="margin-top:10px">
@@ -805,7 +805,7 @@ function response(obj) {
 let records = JSON.parse(localStorage.getItem('inv_records') || '[]');
 let currentParsed = null;
 // ★ 여기에 구글 Apps Script URL을 붙여넣으면 매번 입력 불필요
-const FIXED_SHEETS_URL = '';  // 예: 'https://script.google.com/macros/s/XXXX/exec'
+const FIXED_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwW64F8jeq5M0G_-aHwTjkwZhoD3su_GQWDyxCEliFMjqvrBe7F6NNuq13V6rcZwuk4/exec';  // 예: 'https://script.google.com/macros/s/XXXX/exec'
 
 let sheetsUrl = FIXED_SHEETS_URL || localStorage.getItem('inv_sheets_url') || '';
 
@@ -832,7 +832,7 @@ function switchTab(name) {
 // ─── 파싱 ───────────────────────────────────────────
 function parseMessage() {
   const msg = document.getElementById('msg-input').value.trim();
-  if (!msg) { showToast('❗ 메시지를 먼저 붙여넣어 주세요', 'error'); return; }
+  if (!msg) { showToast('? 메시지를 먼저 붙여넣어 주세요', 'error'); return; }
 
   const result = extractData(msg);
   currentParsed = result;
@@ -850,12 +850,14 @@ function extractData(msg) {
   if (!data.broker && msg.match(/^\[한국투자\]/m)) data.broker = '한국투자증권';
   if (!data.broker && msg.match(/^\[키움\]/m)) data.broker = '키움증권';
   if (!data.broker && msg.includes('IBK기업은행')) data.broker = 'IBK기업은행';
+  if (!data.broker && msg.includes('신한투자증권')) data.broker = '신한투자증권';
+  if (!data.broker && msg.includes('메리츠증권')) data.broker = '메리츠증권';
 
   // 타입 감지
-  // 배당/분배금 — 다양한 용어 통합
+  // 배당/분배금 ? 다양한 용어 통합
   const isDividend = msg.includes('배당금') || msg.includes('분배금') ||
     msg.includes('ETF 분배금') || msg.includes('결산분배금') ||
-    msg.includes('배당(현금)');
+    msg.includes('배당(현금)') || msg.includes('분배금 입금 안내');
   // 매수/매도 체결
   const isBuy = /주문유형\s*:\s*매수/.test(msg) ||
     msg.includes('해외주식 매수 주문이 체결') ||
@@ -878,11 +880,16 @@ function extractData(msg) {
   ];
   for (const p of namePatterns) {
     const m = msg.match(p);
-    if (m) { data.name = m[1].trim(); break; }
+    if (m) {
+      // 종목명 끝의 (숫자코드) 제거: KODEX xxx(498400) → KODEX xxx
+      data.name = m[1].trim().replace(/\s*\(\d+\)\s*$/, '');
+      break;
+    }
   }
 
   // 종목코드 추출 (삼성증권 해외주식 매매: - 종목코드 : SCHD)
-  const tickerMatch = msg.match(/종목코드\s*:\s*([A-Z0-9]+)/);
+  const tickerMatch = msg.match(/종목코드\s*:\s*([A-Z0-9]+)/)    // 일반: 종목코드 : SCHD
+    || msg.match(/종목명[^\n]*\(([A-Z]{2,6})\)/);              // 메리츠: 종목명 : xxx (SCHD)
   if (tickerMatch) {
     data.ticker = tickerMatch[1].trim();
     // 해외주식이고 종목코드가 있으면 종목명 대신 사용
@@ -908,8 +915,9 @@ function extractData(msg) {
   // 2) 카카오톡 헤더 날짜 ("2026년 2월 24일 오전 8:02" 형식)
   // 3) 오늘 날짜 (자동입력, 수정 가능)
   const inputDateMatch = msg.match(/입금일자\s*:\s*([\d년월일\s]+)/)
+    || msg.match(/일시\s*:\s*(\d{4}\/\d{2}\/\d{2})/)    // 메리츠: 2026/03/17
     || msg.match(/처리일자\s*:\s*([\d\/\-년월일]+)/)
-    || msg.match(/체결일자?\s*:\s*([\d년월일\s\-\.\/]+)/);
+    || msg.match(/체결일자?\s*:\s*([\d년월일\s\-\.\/]+)/)
 
   // 카카오톡 헤더 날짜: "2026년 2월 24일 오전 8:02, 삼성증권 :"
   const kakaoHeaderMatch = msg.match(/^(\d{4}년\s*\d{1,2}월\s*\d{1,2}일)\s*(?:오전|오후)\s*\d{1,2}:\d{2},/);
@@ -929,6 +937,10 @@ function extractData(msg) {
   // 금액 파싱
   const amtPatterns = [
     { key: 'amount', patterns: [
+      /세후금액\s*:\s*USD\s*([\d.]+)/,              // 메리츠 해외: USD 50.23
+      /세후금액\s*:\s*[￦\]([\d,]+)/,               // 메리츠 국내: ￦3,780
+      /배당금액[^\n]*\/\s*([\d.]+)\s*USD\s*\(세후\)/, // 키움 해외: 0.01 USD (세후)
+      /해외배당금[^\n]+\(세후\)([\d.]+)/,        // 신한 해외: (세후)0.03 USD
       /배당금\s*:\s*([\d.]+[(（][A-Z]+[)）])/,       // 삼성 해외: 0.88(USD)
       /배당금액?\s*:\s*([A-Z]+\s*[\d.]+)/,           // KB 해외: USD 0.09
       /결제금액\(누적\)\s*:\s*([\d.]+)/,              // 삼성 해외매매: 61.860
@@ -952,9 +964,11 @@ function extractData(msg) {
     ]},
     { key: 'tax', patterns: [/세금\s*:\s*([\d,]+원?)/] },
     { key: 'quantity', patterns: [
+      /기준잔고\s*:\s*([\d.]+)주/,          // 메리츠
+      /대상주식 수량\s*:\s*([\d.]+)주/,      // 키움 해외
       /체결수량\s*:\s*([\d,]+주?)/,
-      /주문수량\s*:\s*([\d,]+주?)/,   // 삼성 해외매매
-      /매매수량\s*:\s*([\d,]+주?)/,   // IBK
+      /주문수량\s*:\s*([\d,]+주?)/,
+      /매매수량\s*:\s*([\d,]+주?)/,
       /수량\s*:\s*([\d,]+주?)/,
     ]},
     { key: 'price', patterns: [
@@ -1046,7 +1060,7 @@ function showResult(data) {
   // 표시할 필드 구성
   let fields = [];
   if (data.name) fields.push({ label: '종목명', value: data.name });
-  fields.push({ label: '입금일' + (data.dateAuto ? ' (자동입력 — 수정 가능)' : ''), value: data.date, editable: true, key: 'date' });
+  fields.push({ label: '입금일' + (data.dateAuto ? ' (자동입력 ? 수정 가능)' : ''), value: data.date, editable: true, key: 'date' });
   if (data.amountKRW) fields.push({ label: '금액 (원)', value: Number(data.amountKRW).toLocaleString() + '원', hl: true });
   if (data.amountUSD) fields.push({ label: '금액 (USD)', value: 'USD ' + data.amountUSD, hl: true });
   if (data.taxBefore) fields.push({ label: '세전 금액', value: data.taxBefore });
@@ -1081,14 +1095,14 @@ function saveRecord() {
   localStorage.setItem('inv_records', JSON.stringify(records));
   renderRecords();
   updateCount();
-  showToast('✅ 기록이 저장되었습니다', 'success');
+  showToast('? 기록이 저장되었습니다', 'success');
   if (sheetsUrl) sendToSheets();
 }
 
 function renderRecords() {
   const container = document.getElementById('records-container');
   if (records.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div>아직 기록이 없습니다.<br>메시지를 파싱하고 저장해보세요.</div>`;
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">??</div>아직 기록이 없습니다.<br>메시지를 파싱하고 저장해보세요.</div>`;
     return;
   }
 
@@ -1144,13 +1158,13 @@ function sendToSheets() {
     account:   currentParsed.account   || '',
   });
 
-  // fetch 대신 <img> 태그로 요청 — CORS 우회
+  // fetch 대신 <img> 태그로 요청 ? CORS 우회
   const url = `${sheetsUrl}?${params.toString()}`;
   const img = new Image();
   img.onload = img.onerror = function() {
     // 응답 읽기는 불가능하지만 요청은 서버에 도달함
-    showToast('✅ 전송했습니다! 구글 시트에서 확인해주세요', 'success');
-    btn.textContent = '📤 구글 시트 전송';
+    showToast('? 전송했습니다! 구글 시트에서 확인해주세요', 'success');
+    btn.textContent = '?? 구글 시트 전송';
     btn.disabled = false;
   };
   img.src = url;
@@ -1158,8 +1172,8 @@ function sendToSheets() {
   // 3초 후에도 콜백 없으면 강제로 완료 처리
   setTimeout(() => {
     if (btn.disabled) {
-      showToast('✅ 전송했습니다! 구글 시트에서 확인해주세요', 'success');
-      btn.textContent = '📤 구글 시트 전송';
+      showToast('? 전송했습니다! 구글 시트에서 확인해주세요', 'success');
+      btn.textContent = '?? 구글 시트 전송';
       btn.disabled = false;
     }
   }, 3000);
@@ -1167,9 +1181,9 @@ function sendToSheets() {
 
 function openUrlTest() {
   const url = document.getElementById('sheets-url').value.trim();
-  if (!url) { showToast('❗ URL을 먼저 입력해주세요', 'error'); return; }
+  if (!url) { showToast('? URL을 먼저 입력해주세요', 'error'); return; }
   if (!url.includes('script.google.com') || !url.endsWith('/exec')) {
-    showToast('❌ URL 형식 오류 — /exec 로 끝나야 합니다', 'error');
+    showToast('? URL 형식 오류 ? /exec 로 끝나야 합니다', 'error');
     return;
   }
   window.open(url + '?test=1', '_blank');
@@ -1177,16 +1191,16 @@ function openUrlTest() {
 
 function markConnected() {
   const url = document.getElementById('sheets-url').value.trim();
-  if (!url) { showToast('❗ URL을 먼저 입력해주세요', 'error'); return; }
+  if (!url) { showToast('? URL을 먼저 입력해주세요', 'error'); return; }
   sheetsUrl = url;
   localStorage.setItem('inv_sheets_url', sheetsUrl);
   updateStatus(true);
-  showToast('✅ 연결 설정 완료! 이제 데이터를 전송할 수 있습니다', 'success');
+  showToast('? 연결 설정 완료! 이제 데이터를 전송할 수 있습니다', 'success');
 }
 
 function embedUrl() {
   const url = document.getElementById('sheets-url').value.trim();
-  if (!url) { showToast('❗ URL을 먼저 입력해주세요', 'error'); return; }
+  if (!url) { showToast('? URL을 먼저 입력해주세요', 'error'); return; }
 
   // 현재 HTML 파일 내용을 읽어서 FIXED_SHEETS_URL을 교체 후 다운로드
   const scripts = document.getElementsByTagName('script');
@@ -1206,11 +1220,11 @@ function embedUrl() {
       a.download = 'investment-tracker.html';
       a.click();
       found = true;
-      showToast('✅ URL이 저장된 파일을 다운로드했습니다! 기존 파일과 교체해주세요', 'success');
+      showToast('? URL이 저장된 파일을 다운로드했습니다! 기존 파일과 교체해주세요', 'success');
       break;
     }
   }
-  if (!found) showToast('❌ 저장 실패 — 페이지를 새로고침 후 다시 시도해주세요', 'error');
+  if (!found) showToast('? 저장 실패 ? 페이지를 새로고침 후 다시 시도해주세요', 'error');
 }
 
 function saveSettings() {
@@ -1239,7 +1253,7 @@ function clearInput() {
 
 function copyScript() {
   const text = document.getElementById('script-code').textContent;
-  navigator.clipboard.writeText(text).then(() => showToast('📋 스크립트 복사됨', 'success'));
+  navigator.clipboard.writeText(text).then(() => showToast('?? 스크립트 복사됨', 'success'));
 }
 
 
@@ -1278,6 +1292,10 @@ function parseBulkMessages(text) {
     'ETF 결산분배금 입금 안내',   // 한국투자 결산분배금
     '분배금 입금안내',            // 삼성 분배금입금안내
     '해외주식 권리처리결과 안내', // 삼성 해외배당
+    '해외증권 배당금 입금 안내',   // 신한투자증권 해외배당
+    '메리츠증권] 분배금 입금 안내',         // 메리츠 국내
+    '메리츠증권] 해외주식 분배금 입금 안내', // 메리츠 해외
+    '키움증권 배당 입금 안내',       // 키움 해외배당
     '해외주식 매매 체결 안내',    // 삼성 해외매수/매도
     '주식체결안내',               // 삼성 국내체결
     '[미니스탁]',                 // 한국투자 미니스탁
@@ -1298,21 +1316,21 @@ function parseBulkMessages(text) {
     // 날짜 파싱 (카카오톡 헤더 날짜 사용)
     const msgDate = parseKakaoDate(dateStr);
 
-    // 주식체결안내 — 삼성증권 한 줄 형식
+    // 주식체결안내 ? 삼성증권 한 줄 형식
     if (cleanBody.includes('주식체결안내')) {
       const parsed = parseKakaoTrade(cleanBody, msgDate);
       if (parsed) bulkParsed.push(parsed);
       continue;
     }
 
-    // 미니스탁 체결 — 한국투자 형식
+    // 미니스탁 체결 ? 한국투자 형식
     if (cleanBody.includes('[미니스탁]') && cleanBody.includes('체결')) {
       const parsed = parseMinistock(cleanBody, msgDate);
       if (parsed) bulkParsed.push(parsed);
       continue;
     }
 
-    // 배당/분배금 — 여러 줄 형식: extractData 재활용
+    // 배당/분배금 ? 여러 줄 형식: extractData 재활용
     const parsed = extractData(cleanBody);
     // dateAuto=true(메시지 내 날짜 없음) → 카카오톡 헤더 날짜로 덮어쓰기
     if (parsed.dateAuto || !parsed.date) {
@@ -1396,7 +1414,7 @@ function renderBulkPreview() {
   const stats = document.getElementById('bulk-stats');
 
   if (bulkParsed.length === 0) {
-    showToast('❗ 투자 관련 메시지를 찾지 못했습니다', 'error');
+    showToast('? 투자 관련 메시지를 찾지 못했습니다', 'error');
     return;
   }
 
@@ -1437,7 +1455,7 @@ function renderBulkPreview() {
     </div>
   `).join('');
 
-  showToast(`✅ ${bulkParsed.length}건 파싱 완료!`, 'success');
+  showToast(`? ${bulkParsed.length}건 파싱 완료!`, 'success');
 }
 
 function bulkSaveLocal() {
@@ -1447,12 +1465,12 @@ function bulkSaveLocal() {
   localStorage.setItem('inv_records', JSON.stringify(records));
   renderRecords();
   updateCount();
-  showToast(`✅ ${bulkParsed.length}건 로컬 저장 완료!`, 'success');
+  showToast(`? ${bulkParsed.length}건 로컬 저장 완료!`, 'success');
 }
 
 async function bulkSendAll() {
   if (!sheetsUrl) {
-    showToast('❗ 구글 시트 URL을 먼저 설정해주세요', 'error');
+    showToast('? 구글 시트 URL을 먼저 설정해주세요', 'error');
     return;
   }
   if (bulkParsed.length === 0) return;
@@ -1497,8 +1515,8 @@ async function bulkSendAll() {
   // 로컬에도 저장
   bulkSaveLocal();
   btn.disabled = false;
-  progressText.textContent = `✅ ${total}건 전송 완료!`;
-  showToast(`✅ ${total}건 구글 시트 전송 완료!`, 'success');
+  progressText.textContent = `? ${total}건 전송 완료!`;
+  showToast(`? ${total}건 구글 시트 전송 완료!`, 'success');
 }
 
 // ─── 토스트 ──────────────────────────────────────────
